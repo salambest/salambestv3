@@ -1,15 +1,72 @@
-<button id="startBtn">Başlat</button>
-<video id="bgVideo" muted playsinline style="display:none; width:100vw; height:100vh; object-fit:cover;">
-  <source src="video/arkaplan.mp4" type="video/mp4" />
-</video>
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <title>Məni Sevirsənmi?</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: sans-serif; background: black;
+    }
+    #bgVideo {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; filter: brightness(0.4);
+    }
+    .content {
+      position: relative; z-index: 1; color: white; text-align: center; height: 100vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+    }
+    h1 {
+      font-size: 3rem; margin-bottom: 30px; text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    }
+    .btn-group {
+      display: flex; gap: 20px;
+    }
+    button {
+      padding: 12px 30px; font-size: 1.5rem; border: none; border-radius: 10px; cursor: pointer;
+      background: rgba(255, 255, 255, 0.3); color: white; backdrop-filter: blur(5px);
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+  </style>
+</head>
+<body>
 
-<script>
-  const video = document.getElementById('bgVideo');
-  const btn = document.getElementById('startBtn');
+  <video id="bgVideo" autoplay muted loop playsinline>
+    <source src="video/arkaplan.mp4" type="video/mp4" />
+  </video>
 
-  btn.addEventListener('click', () => {
-    video.style.display = 'block';
-    video.play();
-    btn.style.display = 'none';
-  });
-</script>
+  <div class="content">
+    <h1 id="question">Məni sevirsənmi?</h1>
+    <div id="firstOptions" class="btn-group">
+      <button onclick="nextStep(true)">Hə</button>
+      <button onclick="nextStep(false)">Yox</button>
+    </div>
+  </div>
+
+  <audio id="yesSound" src="sounds/yesSound.mp3" preload="auto"></audio>
+  <audio id="noSound" src="sounds/noSound.mp3" preload="auto"></audio>
+
+  <script>
+    async function nextStep(isYes) {
+      try {
+        if (isYes) {
+          await document.getElementById('yesSound').play();
+          document.getElementById('question').textContent = 'Danışaq?';
+          document.getElementById('firstOptions').innerHTML = `
+            <button onclick="alert('uşşşşşşş yeyərəm səni')">Danışaq</button>
+            <button onclick="alert('küsdüm')">Yox</button>
+          `;
+        } else {
+          await document.getElementById('noSound').play();
+          document.getElementById('question').textContent = 'Kırdın beni hıh';
+          document.getElementById('firstOptions').style.display = 'none';
+        }
+      } catch (err) {
+        console.log('Ses çalma hatası:', err);
+      }
+    }
+  </script>
+
+</body>
+</html>
